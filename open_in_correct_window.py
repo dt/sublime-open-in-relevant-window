@@ -23,6 +23,10 @@ class OpenFileInCorrectWindow(sublime_plugin.EventListener):
 
     filename = view.file_name()
     if filename:
+      for folder in view.window().folders():
+        if filename.startswith(folder):
+          print("file {} exists in {}".format(filename, folder))
+          return
       window = window_for_file(filename)
     if window != view.window():
       line = None
@@ -39,3 +43,4 @@ class OpenFileInCorrectWindow(sublime_plugin.EventListener):
       window.run_command('focus_neighboring_group')
       window.focus_view(new_view)
       view.close()
+      sublime.status_message("Switched opened file to matching window...")
